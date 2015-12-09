@@ -1,0 +1,1 @@
+module.exports = require('./globs').scripts.shims;
