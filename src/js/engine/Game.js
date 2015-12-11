@@ -35,16 +35,6 @@ class DnextGame extends PIXI.utils.EventEmitter {
         this.loaders.Loader.add(name, url)
     }
 
-    loop() {
-        PIXI.ticker.shared.add((time) => {
-            this.emit('state.update');
-            this.state.current.update(time);
-
-            this.emit('state.render');
-            this.renderer.render(this.state.current.stage);
-        });
-    }
-
     destroy() {
         super.destroy();
         ['state', 'input'].forEach((property) => {

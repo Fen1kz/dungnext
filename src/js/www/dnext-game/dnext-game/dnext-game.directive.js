@@ -11,17 +11,20 @@ module.exports = function () {
 }
 
 controller.$inject = ['DnextGameService'];
-function controller(DnextGameService) {
-    this.DnextGameService = DnextGameService;
+function controller(GameService) {
+    this.GameService = GameService;
 }
 
 function link(scope, element, attr, ctrl) {
-    let DnextGameService = ctrl.DnextGameService;
-    let game = DnextGameService.init(scope, element);
+    let GameService = ctrl.GameService;
+    let game = GameService.init(scope, element);
 
-    game.state.add('first', require('game/state/First'));
-    game.state.start('first');
-
+    Promise.all([
+            game.state.add('Stage1', require('game/state/Stage1'))
+            , game.state.add('Stage2', require('game/state/Stage2'))
+            , game.state.add('Stage3', require('game/state/Stage3'))
+        ])
+        .then(() => game.state.start('Stage2'));
     //scope.event = (name, ...args) => {
     //    game.trigger(name, ...args);
     //};

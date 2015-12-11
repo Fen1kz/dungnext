@@ -26,7 +26,5 @@ app.controller('AppCtrl', ['$mdSidenav', function ($mdSidenav) {
     this.toggleSidenav = (menuId) => $mdSidenav(menuId).toggle();
 }]);
 
-app.service('DnextGameService', require('./dnext-game/dnext-game.service'));
-app.directive('dnextGame', require('./dnext-game/dnext-game.directive'));
+require('./www/dnext-game/config')(app);
 
-require('./home/config.home');
