@@ -14,17 +14,6 @@ module.exports = class Chunk extends Region {
         this.cells = new CompositeMap2d();
         this.chunks = new CompositeMap2d();
 
-        for (let X = 0; X < this.WIDTH; ++X) {
-            for (let Y = 0; Y < this.HEIGHT; ++Y) {
-                let cell = new Cell(this, this.X + X, this.Y + Y);
-                this.cells.put(this.X + X, this.Y + Y, cell);
-            }
-        }
-
-        this.cells.forEach((cell) => {
-            this.addChild(cell);
-            cell.draw();
-        })
     }
 
 

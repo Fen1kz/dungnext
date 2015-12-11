@@ -6,8 +6,6 @@ export default function (gulp, $, config) {
 
     gulp.task('build', ['scripts:local', 'styles:local']);
 
-    gulp.task('rewatch', $.sequence('dist', 'watch'));
-
     gulp.task('watch', () => {
         $.livereload.listen(function (err) {
             if (err) return console.log(err);

@@ -26,8 +26,7 @@ class DnextGame extends PIXI.utils.EventEmitter {
 
         PIXI.RESOLUTION = 2;
         this.c = {
-            SIZE: 20
-            , CHUNK_SIZE: 24
+            SIZE: 5
         }
     }
 
@@ -38,8 +37,10 @@ class DnextGame extends PIXI.utils.EventEmitter {
 
     loop() {
         PIXI.ticker.shared.add((time) => {
+            this.emit('state.update');
             this.state.current.update(time);
 
+            this.emit('state.render');
             this.renderer.render(this.state.current.stage);
         });
     }
