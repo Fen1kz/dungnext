@@ -30,6 +30,7 @@ module.exports = class Container extends PIXI.Container {
             this.debugGfx.visible = !this.debugGfx.visible;
         });
         this.debugGfx = this.add.graphics();
+        this.debugGfx.cacheAsBitMap = true;
         this.debugDraw();
     }
 

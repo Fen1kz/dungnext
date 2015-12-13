@@ -13,5 +13,5 @@ module.exports = function () {
 
 controller.$inject = ['DnextGameService'];
 function controller(GameService) {
-    this.state = (name) => GameService.game.state.start(name);
+    this.state = () => GameService.game.state;
 }

@@ -12,8 +12,6 @@ class StateManager {
 
         this.states[name].preload(PIXI.loader);
 
-        this.kill = 0;
-
         return (PIXI.loader._numToLoad > 0
             ? new Promise((resolve, reject) => PIXI.loader.load(() => resolve(true)))
             : Promise.resolve(true));
@@ -38,17 +36,26 @@ class StateManager {
 
         PIXI.ticker.shared.add(this.loop, this);
         PIXI.ticker.shared.start();
+
+        if (!this.game.renderer.plugins.interaction) {
+            PIXI.ticker.shared.addOnce(() => {
+                this.game.renderer.plugins.interaction = new PIXI.interaction.InteractionManager(this.game.renderer);
+            });
+        }
     }
 
     stop() {
-        console.log('stopping')
         if (!this.current) throw 'stopping nothing';
+
+        this.game.renderer.plugins.interaction.destroy();
+        this.game.renderer.plugins.interaction = null;
 
         PIXI.ticker.shared.stop();
         PIXI.ticker.shared.remove(this.loop, this);
 
         this.current.stage.destroy(true);
-        this.kill += 1;
+
+        this.current = null;
     }
 
     destroy() {

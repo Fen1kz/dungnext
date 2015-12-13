@@ -24,7 +24,7 @@ function link(scope, element, attr, ctrl) {
             , game.state.add('Stage2', require('game/state/Stage2'))
             , game.state.add('Stage3', require('game/state/Stage3'))
         ])
-        .then(() => game.state.start('Stage2'));
+        .then(() => game.state.start('Stage1'));
     //scope.event = (name, ...args) => {
     //    game.trigger(name, ...args);
     //};
