@@ -7,6 +7,7 @@ let Minimap = require('game/entity/minimap/Minimap');
 
 module.exports = class FirstState extends require('engine/State') {
     create() {
+        window.state = this;
         window.game = this.game;
 
         this.level = new Level(this.game);
@@ -31,19 +32,19 @@ module.exports = class FirstState extends require('engine/State') {
         Promise.try(() => {
         }).bind(this)
             .then(() => {
-                return this.loop(this.counter(roomsCount), () => {
+                let i = 0;
+                return this.loop(() => {
                     let p = getRandomPointInCircle(20);
                     this.rooms.push(this.level.add.room(p.x
                         , p.y
-                        , this.game.random.between(5, 15)
-                        , this.game.random.between(5, 15)));
+                        , this.game.random.PM2between(3, 20)
+                        , this.game.random.PM2between(3, 20)));
+                    return i++ < roomsCount;
                 }, {delay: 50})
             })
             .then(() => {
                 this.rooms.map((r) => r._position.copy(r.position));
-                return this.loop(
-                    (result) => !result
-                    , () => {
+                return this.loop(() => {
                         let separated = true;
                         this.rooms.forEach((room1) => {
                             let velocity = new geom.Point();
@@ -74,10 +75,11 @@ module.exports = class FirstState extends require('engine/State') {
                                 room1.setxy(room1._position);
                             }
                         });
-                        return separated;
+                        return !separated;
                     }
                     , {delay: 50});
             })
+            .catch(console.error.bind(console));
     }
 
     update() {
