@@ -26,30 +26,37 @@ module.exports = class FirstState extends require('engine/State') {
             );
         };
 
+        let ROOMS_COUNT = 100;
         this.rooms = [];
-        let roomsCount = 50;
+        this.preRooms = [];
+
+        let delays = [0, 50, 50];
 
         Promise.try(() => {
         }).bind(this)
             .then(() => {
                 let i = 0;
                 return this.loop(() => {
-                    let p = getRandomPointInCircle(20);
-                    this.rooms.push(this.level.add.room(p.x
-                        , p.y
-                        , this.game.random.PM2between(3, 20)
-                        , this.game.random.PM2between(3, 20)));
-                    return i++ < roomsCount;
-                }, {delay: 50})
+                    let p = getRandomPointInCircle(Math.floor(ROOMS_COUNT * .3));
+                    //let w = this.game.random.between(5, 15);
+                    //let h = this.game.random.between(5, 15);
+                    //let sq = this.game.random.between(25, 225);
+                    //let w = this.game.random.between(5, 15);
+                    //let h = sq / w;
+                    let w = this.game.random.PM2between(5, 15);
+                    let h = this.game.random.PM2between(5, 15);
+                    this.preRooms.push(this.level.add.room(p.x, p.y, w, h));
+                    return i++ < ROOMS_COUNT;
+                }, {delay: delays[0]})
             })
             .then(() => {
-                this.rooms.map((r) => r._position.copy(r.position));
+                this.preRooms.map((r) => r._position.copy(r.position));
                 return this.loop(() => {
                         let separated = true;
-                        this.rooms.forEach((room1) => {
+                        this.preRooms.forEach((room1) => {
                             let velocity = new geom.Point();
                             let center1 = room1.createRectangle().createCenter();
-                            this.rooms.forEach((room2) => {
+                            this.preRooms.forEach((room2) => {
                                 if (room1 === room2) return;
 
                                 if (!geom.Rectangle.intersect(room1.createRectangle(), room2.createRectangle())) return;
@@ -61,7 +68,7 @@ module.exports = class FirstState extends require('engine/State') {
                                 let diffLength2 = diff.length2();
 
                                 if (diffLength2 > 0) {
-                                    //diff.nor().mult(5);
+                                    diff.nor().mult(5);
                                     velocity.add(diff);
                                 }
                             });
@@ -77,7 +84,62 @@ module.exports = class FirstState extends require('engine/State') {
                         });
                         return !separated;
                     }
-                    , {delay: 50});
+                    , {delay: delays[1]});
+            })
+            .then(() => {
+                this.preRooms.sort((r1, r2) => {
+                    return r1.WIDTH + r1.HEIGHT > r2.WIDTH + r2.HEIGHT ? -1 : 1;
+                });
+                let wr = [], hr = [], er = [];
+                this.preRooms.forEach((r) => {
+                    if (r.WIDTH > r.HEIGHT) {
+                        wr.push(r)
+                    } else if (r.WIDTH < r.HEIGHT) {
+                        hr.push(r);
+                    } else {
+                        er.push(r)
+                    }
+                });
+                console.log(wr.length, er.length, hr.length);
+                this.preRooms.slice(0, Math.floor(ROOMS_COUNT * .3)).forEach((room) => {
+                    room.debugColor = 0xFF0000;
+                    room.debugDraw();
+                });
+                //this.rooms.map((r) => r._position.copy(r.position));
+                //return this.loop(() => {
+                //        let separated = true;
+                //        this.rooms.forEach((room1) => {
+                //            let velocity = new geom.Point();
+                //            let center1 = room1.createRectangle().createCenter();
+                //            this.rooms.forEach((room2) => {
+                //                if (room1 === room2) return;
+                //
+                //                if (!geom.Rectangle.intersect(room1.createRectangle(), room2.createRectangle())) return;
+                //
+                //                let center2 = room2.createRectangle().createCenter();
+                //
+                //                let diff = center1.clone().sub(center2);
+                //
+                //                let diffLength2 = diff.length2();
+                //
+                //                if (diffLength2 > 0) {
+                //                    //diff.nor().mult(5);
+                //                    velocity.add(diff);
+                //                }
+                //            });
+                //
+                //            if (velocity.length2() > 0) {
+                //                separated = false;
+                //
+                //                //velocity.nor();
+                //
+                //                room1._position.add(velocity);
+                //                room1.setxy(room1._position);
+                //            }
+                //        });
+                //        return !separated;
+                //    }
+                //    , {delay: delays[2]});
             })
             .catch(console.error.bind(console));
     }

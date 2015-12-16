@@ -8,7 +8,7 @@ module.exports = class Room extends Region {
     constructor(...args) {
         super(...args);
 
-        this.debugColor = 0xFF0000;
+        this.debugColor = 0x8888FF;
         this.debugInit('r');
 
         this._position = new geom.Point();
