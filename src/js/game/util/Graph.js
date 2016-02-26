@@ -1,6 +1,8 @@
 module.exports = class Graph {
     constructor() {
         this.points = [];
+        this.edges = [];
+        this.triangles = [];
     }
 
     add(point) {
@@ -9,9 +11,10 @@ module.exports = class Graph {
 
     draw(gfx) {
         gfx.clear();
-        gfx.beginFill();
         this.points.forEach((p) => {
-            gfx.drawCircle(p.x, p.y, 5);
+            gfx.beginFill(p.color || 0x0);
+            gfx.drawCircle(p.x, p.y, (2 + p.i) * .5);
+            gfx.endFill();
         })
     }
 };

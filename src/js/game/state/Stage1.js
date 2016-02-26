@@ -111,7 +111,7 @@ module.exports = class FirstState extends require('engine/State') {
                         return !separated;
                     }
                     , {delay: delays[1]});
-                    //, {delay: 1});
+                //, {delay: 1});
             })
             .then(() => {
                 let vertices = this.rooms.map((r) => ({x: r.x + r.width / 2, y: r.y + r.height / 2}));
@@ -120,13 +120,26 @@ module.exports = class FirstState extends require('engine/State') {
                 let graph = new Graph();
                 let vi = 0;
                 return this.loop(() => {
-                    //console.log(v);
-                    graph.add(vertices[vi]);
-                    graph.draw(gfx);
-                    return ++vi < vertices.length;
-                //}, {delay: delays[2]});
-                }, {delay: 1100});
-                //graph.add();
+                        //console.log(v);
+                        graph.add(Object.assign({}, vertices[vi], {i: vi}));
+                        graph.draw(gfx);
+                        return ++vi < vertices.length;
+                        //}, {delay: delays[2]});
+                    }, {delay: 100})
+                    .then(() => {
+                        var gp0 = graph.points[0];
+                        gp0.color = 0xFF0000;
+                        graph.points = graph.points.sort((gp1, gp2) => {
+                            var length1 = Math.pow(gp0.x - gp1.x, 2) + Math.pow(gp0.y - gp1.y, 2);
+                            var length2 = Math.pow(gp0.x - gp2.x, 2) + Math.pow(gp0.y - gp2.y, 2);
+                            return length1 - length2;
+                        });
+                        graph.points.forEach((p, i) => p.i = i);
+                        graph.draw(gfx);
+
+                        graph.points[1];
+                    });
+
 
                 //let triangles = Delaunay.triangulate(vertices);
                 //
