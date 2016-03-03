@@ -118,107 +118,13 @@ module.exports = class FirstState extends require('engine/State') {
 
                 let gfx = this.level.add.graphics();
                 let graph = new Graph();
-                let vi = 0;
-                return this.loop(() => {
-                        //console.log(v);
-                        graph.add(Object.assign({}, vertices[vi], {i: vi}));
-                        graph.draw(gfx);
-                        return ++vi < vertices.length;
-                        //}, {delay: delays[2]});
-                    }, {delay: 100})
-                    .then(() => {
-                        var gp0 = graph.points[0];
-                        gp0.color = 0xFF0000;
-                        graph.points = graph.points.sort((gp1, gp2) => {
-                            var length1 = Math.pow(gp0.x - gp1.x, 2) + Math.pow(gp0.y - gp1.y, 2);
-                            var length2 = Math.pow(gp0.x - gp2.x, 2) + Math.pow(gp0.y - gp2.y, 2);
-                            return length1 - length2;
-                        });
-                        graph.points.forEach((p, i) => p.i = i);
-                        graph.draw(gfx);
 
-                        graph.points[1];
-                    });
+                graph.points.push(vertices.map(v => new PIXI.Point(v.x, v.y)));
+                graph.points.forEach((p, i) => p.i = i);
 
+                let st = graph.makeSuperTriangle();
 
-                //let triangles = Delaunay.triangulate(vertices);
-                //
-                //let sides = [];
-                //for (let i = triangles.length; i;) {
-                //    let p1 = vertices[triangles[--i]];
-                //    let p2 = vertices[triangles[i - 1]];
-                //    if (!p2) break;
-                //    let so = sides.some((side) =>
-                //        side.x1 == p1[0] && side.x2 == p2[0] && side.y1 == p1[1] && side.y2 == p2[1]
-                //    );
-                //    console.log(`(${p1[0]}:${p1[1]}) (${p2[0]}:${p2[1]})`);
-                //    if (so) console.log('TRUE');
-                //    if (p2 && !so) {
-                //        sides.push({
-                //            x1: p1[0]
-                //            , x2: p2[0]
-                //            , y1: p1[1]
-                //            , y2: p2[1]
-                //            , l: Math.sqrt((p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]))
-                //        });
-                //    }
-                //    //graphFull.push([, vertices[triangles[--i]], vertices[triangles[--i]]]);
-                //}
-                //
-                //console.log(sides.length);
-                //
-                //let gfx = this.level.add.graphics();
-                //sides.map(side => {
-                //    gfx.lineStyle(10, 0xFF, 0.2);
-                //    gfx.moveTo(side.x1, side.y1);
-                //    gfx.lineTo(side.x2, side.y2);
-                //});
-
-
-                //let graphFull = [];
-                //for (let i = triangles.length; i;) {
-                //    graphFull.push([vertices[triangles[--i]], vertices[triangles[--i]], vertices[triangles[--i]]]);
-                //}
-                //
-                //let gfxDelaunay = this.level.add.graphics();
-                //gfxDelaunay.lineStyle(1, 0x0, 1.1);
-                //for (let i = 1; i--;) {
-                //    gfxDelaunay.lineStyle(5, (Math.random() * 0xFFFFFF));
-                //    gfxDelaunay.moveTo(graphFull[i][0][0], graphFull[i][0][1]);
-                //    gfxDelaunay.lineTo(graphFull[i][1][0], graphFull[i][1][1]);
-                //    gfxDelaunay.lineTo(graphFull[i][2][0], graphFull[i][2][1]);
-                //}
-                //
-                //let graphMST = [];
-                //graphFull.map((triangle) => {
-                //    let sides = triangle.map((p1, pointIndex) => {
-                //        let p2 = triangle[(pointIndex + 1) % 3];
-                //        return {
-                //            x1: p1[0]
-                //            , x2: p2[0]
-                //            , y1: p1[1]
-                //            , y2: p2[1]
-                //            , l: Math.sqrt((p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]))
-                //        };
-                //    });
-                //
-                //    graphMST.push(_.min(sides, (s) => s.l));
-                //})
-                //let gfxMST = this.level.add.graphics();
-                //gfxMST.lineStyle(1, 0xff0000, 1.1);
-                //for (let i = graphMST.length; --i;) {
-                //    gfxMST.moveTo(graphMST[i].x1, graphMST[i].y1);
-                //    gfxMST.lineTo(graphMST[i].x2, graphMST[i].y2);
-                //}
-
-                //for (let triangleIndex = triangles.length; triangleIndex;) {
-                //    let sides = [
-                //        vertices[triangles[--triangleIndex]][0] * vertices[triangles[triangleIndex]][0] + vertices[triangles[triangleIndex]][1] * vertices[triangles[triangleIndex]][1]
-                //    ]
-                //    graph.moveTo();
-                //    graph.lineTo(vertices[triangles[--triangleIndex]][0], vertices[triangles[triangleIndex]][1]);
-                //    graph.lineTo(vertices[triangles[--triangleIndex]][0], vertices[triangles[triangleIndex]][1]);
-                //}
+                graph.draw(gfx);
             })
             .catch(console.error.bind(console));
     }
