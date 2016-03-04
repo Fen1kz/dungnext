@@ -44,7 +44,7 @@ class Triangle {
         var dy = this.center.y - p.y;
         var dist_squared = dx * dx + dy * dy;
 
-        return (dist_squared <= this.radius_squared);
+        return (dist_squared <= this.radius2);
     }
 
     draw(gfx) {
@@ -60,6 +60,7 @@ module.exports = class Graph {
     }
 
     makeSuperTriangle() {
+        debugger
         let br = {max: this.points[0].clone(), min: this.points[0].clone()};
         this.points.forEach((p) => {
             if (p.x < br.min.x) br.min.x = p.x;
@@ -80,6 +81,7 @@ module.exports = class Graph {
             , new Edge([p[2], p[0]])
         ];
         let triangle = new Triangle(p, e);
+        return triangle;
     }
 
     draw(gfx) {

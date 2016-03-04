@@ -119,7 +119,7 @@ module.exports = class FirstState extends require('engine/State') {
                 let gfx = this.level.add.graphics();
                 let graph = new Graph();
 
-                graph.points.push(vertices.map(v => new PIXI.Point(v.x, v.y)));
+                graph.points = vertices.map(v => new PIXI.Point(v.x, v.y));
                 graph.points.forEach((p, i) => p.i = i);
 
                 let st = graph.makeSuperTriangle();
